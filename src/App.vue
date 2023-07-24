@@ -8,6 +8,6 @@
       <button type="submit">Login</button>
   </form>
 
-  <Label>Ainda não possui conta?</Label>
+  <Label>Ainda não possui conta</Label>
   <button type="submit">Fazer conta</button>
 </template>

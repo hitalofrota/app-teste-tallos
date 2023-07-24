@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>
-      Teste About
+      Teste RegisterEmployee
     </p>
   </div>
 </template>

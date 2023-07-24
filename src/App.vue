@@ -7,7 +7,7 @@
 import FooterScreen from './components/Footer.vue'
 
 export default {
-  name: 'HomeView',
+  name: 'HomeLogin',
   components: {
     FooterScreen
   }

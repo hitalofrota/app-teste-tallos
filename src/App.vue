@@ -1,5 +1,16 @@
 <template>
-  <p>
-    <label>Nome</label>
-  </p>
+  <router-view/>
+  <FooterScreen />
 </template>
+
+<script>
+import FooterScreen from './components/Footer.vue'
+
+export default {
+  name: 'HomeView',
+  components: {
+    FooterScreen
+  }
+}
+</script>
+

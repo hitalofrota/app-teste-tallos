@@ -9,15 +9,15 @@
                 <div>
                     <form>
                     <div class="col-5">
-                        <input type="text" class="form-control mt-2" placeholder="Login" v-model="login">
+                        <input type="text" class="form-control mt-2" placeholder="Email" v-model="email">
                     </div>
                     <div class="col-5">
                         <input type="text" class="form-control mt-2" placeholder="Senha" v-model="password">
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary mt-3 buttonStyle" @click="exibirValor">Entrar</button>
-                    </div>
                     </form>
+                    <div>
+                        <button class="btn btn-primary mt-3 buttonStyle" @click="loginApplication">Entrar</button>
+                    </div>
                 </div>
                 <div>
                     <p class="mt-5">Você ainda não possui cadastro?</p>
@@ -33,23 +33,65 @@
 </template>
 
 <script>
+    import axios from 'axios'
 
     export default {
         name: 'LoginComponent',
 
         data() {
             return {
-                login: '',
+                email: '',
                 password: ''
             }
         },
 
-        methods: {
-            exibirValor() {
-            console.log(this.login)
-            console.log(this.password)
+        mounted() {
+            this.getUsers()
         },
-  },
+
+        methods: {
+        async loginApplication() {
+        const data = {
+            email: this.email,
+            password: this.password
+        };
+
+        const url = 'http://localhost:3000/auth/login';
+
+        await axios.post(url, data)
+            .then(response => {
+            console.log("token",response)
+            console.log('Resposta do servidor:', response.data.access_token);
+            const token = response.data.access_token;
+            this.token = token;
+            localStorage.setItem('token', token);
+            this.getUsers()
+            })
+            .catch(error => {
+            console.error('Erro na requisição:', error);
+            });
+        },
+
+        async getUsers() {
+            const tokenJWT = await localStorage.getItem('token')
+            let config = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: "http://localhost:3000/users",
+            headers: {
+                Authorization: `Bearer ${tokenJWT}`,
+            },
+         };
+        await axios
+        .request(config)
+            .then((response) => {
+            console.log("Usuários", response.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        },
+    }
     }
 </script>
 

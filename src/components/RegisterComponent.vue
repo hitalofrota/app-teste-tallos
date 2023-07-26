@@ -9,8 +9,8 @@
                 <div>
                     <form>
                     <div>
-                        <label>Login</label>
-                        <input type="text" class="form-control mt-2" v-model="login">
+                        <label>Nome</label>
+                        <input type="text" class="form-control mt-2" v-model="name">
                     </div>
                     <div>
                         <label>Email</label>
@@ -18,21 +18,21 @@
                     </div>
                     <div>
                         <label>Senha</label>
-                        <input type="text" class="form-control mt-2" v-model="password1">
+                        <input type="text" class="form-control mt-2" v-model="password">
                     </div>
                     <div>
                         <label>Confirme sua senha</label>
                         <input type="text" class="form-control mt-2" v-model="password2">
                     </div>
-                    <div class="d-flex justify-content-center">
-                    <div class="buttonSpace">
-                        <button type="submit" class="btn btn-primary mt-2 buttonStyle" @click="exibirValor">Registrar</button>
-                    </div>
-                    <div class="buttonSpace">
-                        <router-link to="/" class="btn btn-success mt-2 buttonStyle">Voltar ao Início</router-link>
-                    </div>
-                    </div>
                     </form>
+                        <div class="d-flex justify-content-center">
+                        <div class="buttonSpace">
+                            <button type="submit" class="btn btn-primary mt-2 buttonStyle" @click="registerUser">Registrar</button>
+                        </div>
+                        <div class="buttonSpace">
+                            <router-link to="/" class="btn btn-success mt-2 buttonStyle">Voltar ao Início</router-link>
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -40,25 +40,40 @@
 </template>
 
 <script>
+import axios from 'axios'
+
     export default {
         name: 'RegisterComponent',
 
         data() {
             return {
-                login: '',
+                name: '',
                 email: '',
-                password1: '',
+                password: '',
                 password2: ''
             }
         },
 
         methods: {
-            exibirValor() {
-            if(this.password1 != this.password2){
-                alert("A confirmação de senha não é igual a senha")
-            }
-        },
+      async registerUser() {
+        const data = {
+            name: this.name,
+            email: this.email,
+            password: this.password
+        };
+
+        const url = 'http://localhost:3000/users';
+
+        await axios.post(url, data)
+            .then(response => {
+            console.log('Resposta do servidor:', response.data);
+            this.name = "", this.email = "",this.password = "",this.password2 = ""
+            })
+            .catch(error => {
+            console.error('Erro na requisição:', error);
+            });
         }
+    }
     }
 </script>
 

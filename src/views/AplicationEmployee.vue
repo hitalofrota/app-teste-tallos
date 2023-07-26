@@ -1,7 +1,235 @@
 <template>
-    <div>
-        <p>
-            Teste RegisterEmployee
-        </p>
+    <div class="container mt-4">
+        <button class="btn btn-primary mb-3" @click="createModal()">Adicionar novo Usuário</button>
+      <table class="table table-bordered custom-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.id">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" @click="editModal(user)">Editar</button>
+              <button class="btn btn-danger btn-sm" @click="removeModal(user)">Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</template>
+
+    <div class="container mt-4">
+        <!-- Modal -->
+    <div class="modal col-6" ref="creteModal">
+      <div class="modal-content">
+        <!-- Conteúdo do modal -->
+        <div class="modal-header">
+          <h5 class="modal-title">Cadastro</h5>
+          <button type="button" class="close" data-dismiss="modal" @click="closeCreteModal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Nome:</label>
+            <input type="text" class="form-control" id="name" v-model="name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" v-model="email">
+          </div>
+          <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" class="form-control" id="password" v-model="password">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeCreteModal">Cancelar</button>
+          <button type="button" class="btn btn-primary" @click="confirmCreateModal">Confirmar</button>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal col-6" ref="myModal">
+      <div class="modal-content">
+        <!-- Conteúdo do modal -->
+        <div class="modal-header">
+          <h5 class="modal-title">Cadastro</h5>
+          <button type="button" class="close" data-dismiss="modal" @click="closeModal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Nome:</label>
+            <input type="text" class="form-control" id="name" v-model="name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" v-model="email">
+          </div>
+          <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" class="form-control" id="password" v-model="password">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeModal">Cancelar</button>
+          <button type="button" class="btn btn-primary" @click="confirmModal">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal col-6" ref="removeModal">
+      <div class="modal-content">
+        <!-- Conteúdo do modal -->
+        <div class="modal-header">
+          <h5 class="modal-title">Remoção de usuário</h5>
+          <button type="button" class="close" data-dismiss="modal" @click="closeRemoveModal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+            <p class="ml-4">Você realmente deseja excluir este usuário?</p>
+            <p>Essa ação pode ser irreversível</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeRemoveModal">Cancelar</button>
+          <button type="button" class="btn btn-primary" @click="confirmRemoveModal">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+  </div>
+  </div>
+
+  </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+        name: 'ListEmployees',
+
+        data() {
+    return {
+        name: '',
+        email: '',
+        password: '',
+        users: [],
+    };
+  },
+
+  mounted() {
+    const validator = localStorage.getItem('token');
+    if (validator == null) {
+        this.$router.push("/");
+    } else {
+        this.getUsers()
+    }
+  },
+
+  methods: {
+    //Request Usuário
+    async getUsers() {
+            const tokenJWT = await localStorage.getItem('token')
+            let config = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: "http://localhost:3000/users",
+            headers: {
+                Authorization: `Bearer ${tokenJWT}`,
+            },
+         };
+        await axios
+        .request(config)
+        .then((response) => {
+          console.log(response.data)
+          this.users = response.data
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    //Modal de Criação
+    createModal() {
+        this.$refs.myModal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+    },
+    closeCreateModal() {
+        this.$refs.myModal.style.display = 'none';
+        document.body.style.overflow = 'auto'; 
+    },
+    confirmCreateModal() {
+        this.closeModal();
+    },
+    
+    //Modal de Edição
+    editModal() {
+        this.$refs.myModal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+    },
+    closeModal() {
+        this.$refs.myModal.style.display = 'none';
+        document.body.style.overflow = 'auto'; 
+    },
+    confirmModal() {
+        this.closeModal();
+    },
+
+    //Modal de Remoção
+    removeModal() {
+        this.$refs.removeModal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+    },
+    closeRemoveModal() {
+        this.$refs.removeModal.style.display = 'none';
+        document.body.style.overflow = 'auto'; 
+    },
+    confirmRemoveModal() {
+        this.closeModal();
+  },
+}
+
+  
+}
+</script>
+
+<style>
+.modal {
+  /* Estilos do modal */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  border-radius: 4px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal::before {
+  /* Efeito de desfoque no fundo */
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Cor de fundo desfocado */
+  backdrop-filter: blur(5px); /* Desfoque */
+}
+
+.modal-content {
+  margin-top: 10%;
+  margin-left: 30%;
+  width: 600px;
+  position: relative;
+  z-index: 1;
+}
+</style>

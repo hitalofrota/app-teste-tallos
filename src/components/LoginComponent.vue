@@ -45,51 +45,25 @@
             }
         },
 
-        mounted() {
-            this.getUsers()
-        },
-
         methods: {
         async loginApplication() {
         const data = {
             email: this.email,
             password: this.password
         };
-
         const url = 'http://localhost:3000/auth/login';
-
         await axios.post(url, data)
             .then(response => {
-            console.log("token",response)
-            console.log('Resposta do servidor:', response.data.access_token);
             const token = response.data.access_token;
             this.token = token;
             localStorage.setItem('token', token);
-            this.getUsers()
+            setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
+            console.log("Veio aqui ")
             })
             .catch(error => {
+                console.log("Parou aqui ")
             console.error('Erro na requisição:', error);
             });
-        },
-
-        async getUsers() {
-            const tokenJWT = await localStorage.getItem('token')
-            let config = {
-            method: "get",
-            maxBodyLength: Infinity,
-            url: "http://localhost:3000/users",
-            headers: {
-                Authorization: `Bearer ${tokenJWT}`,
-            },
-         };
-        await axios
-        .request(config)
-            .then((response) => {
-            console.log("Usuários", response.data)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
         },
     }
     }

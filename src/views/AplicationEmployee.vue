@@ -17,7 +17,7 @@
             <td>{{ user._id }}</td>
             <td>
               <button class="btn btn-primary btn-sm" @click="editModal(user)">Editar</button>
-              <button class="btn btn-danger btn-sm" @click="removeModal(user.id)">Excluir</button>
+              <button class="btn btn-danger btn-sm" @click="removeModal(user)">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -189,10 +189,13 @@ export default {
     confirmModal() {
         const params = this.idEdit
         this.editUser(params)
+        this.closeModal();
     },
 
     //Modal de Remoção
-    removeModal() {
+    removeModal(user) {
+        console.log("User",user)
+        this.idRemove = user._id
         this.$refs.removeModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
     },
@@ -201,6 +204,8 @@ export default {
         document.body.style.overflow = 'auto'; 
     },
     confirmRemoveModal() {
+        const params = this.idRemove
+        this.removeUser(params)
         this.closeModal();
   },
 
@@ -228,7 +233,7 @@ export default {
             let config = {
             method: "path",
             maxBodyLength: Infinity,
-            url: `http://localhost:3000/users${params}`,
+            url: `http://localhost:3000/users/${params}`,
             headers: {
                 Authorization: `Bearer ${tokenJWT}`,
             },
@@ -238,6 +243,26 @@ export default {
         .then((response) => {
             console.log("Cliente editado", response)
             this.name = "", this.email = ""
+        })
+        .catch((error) => {
+            console.error('Erro na requisição:', error);
+        });
+    },
+
+    async removeUser(params) {
+        const tokenJWT = await localStorage.getItem('token')
+            let config = {
+            method: "delete",
+            maxBodyLength: Infinity,
+            url: `http://localhost:3000/users/${params}`,
+            headers: {
+                Authorization: `Bearer ${tokenJWT}`,
+            },
+         };
+        await axios
+        .request(config)
+        .then((response) => {
+            console.log("Cliente removido", response)
         })
         .catch((error) => {
             console.error('Erro na requisição:', error);

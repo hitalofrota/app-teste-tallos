@@ -1,6 +1,9 @@
 <template>
     <div class="container mt-4">
-        <button class="btn btn-primary mb-3" @click="createModal()">Adicionar novo Usuário</button>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary mb-3" @click="createModal()">Adicionar novo Usuário</button>
+            <button class="btn btn-secondary mb-3" @click="logout">Sair da aplicação</button>
+        </div>
       <table class="table table-bordered custom-table">
         <thead>
           <tr>
@@ -26,12 +29,12 @@
 
     <div class="container mt-4">
         <!-- Modal De Criação-->
-    <div class="modal col-6" ref="createModal">
+    <div class="modal col-6" ref="createModal1">
       <div class="modal-content">
         <!-- Conteúdo do modal -->
         <div class="modal-header">
           <h5 class="modal-title">Cadastro de novo cliente</h5>
-          <button type="button" class="close" data-dismiss="modal" @click="closeCreteModal" aria-label="Fechar">
+          <button type="button" class="close" data-dismiss="modal" @click="closeCreateModal" aria-label="Fechar">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -50,7 +53,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeCreteModal">Cancelar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeCreateModal">Cancelar</button>
           <button type="button" class="btn btn-primary" @click="confirmCreateModal">Confirmar</button>
         </div>
       </div>
@@ -161,11 +164,11 @@ export default {
     },
     //Modal de Criação
     createModal() {
-        this.$refs.createModal.style.display = 'block';
+        this.$refs.createModal1.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
     },
     closeCreateModal() {
-        this.$refs.createModal.style.display = 'none';
+        this.$refs.createModal1.style.display = 'none';
         document.body.style.overflow = 'auto'; 
     },
     confirmCreateModal() {
@@ -194,7 +197,6 @@ export default {
 
     //Modal de Remoção
     removeModal(user) {
-        console.log("User",user)
         this.idRemove = user._id
         this.$refs.removeModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
@@ -207,6 +209,11 @@ export default {
         const params = this.idRemove
         this.removeUser(params)
         this.closeModal();
+  },
+
+  logout() {
+    localStorage.removeItem('token');
+    setTimeout(() => this.$router.push("/"), 1000)
   },
 
   async registerUser() {

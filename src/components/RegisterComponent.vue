@@ -68,7 +68,7 @@ import axios from 'axios'
             .then(response => {
             console.log('Resposta do servidor:', response.data);
             this.name = "", this.email = "",this.password = "",this.password2 = ""
-            setTimeout(() => this.$router.push("/"), 3000)
+            setTimeout(() => this.$router.push("/"), 1000)
             })
             .catch(error => {
             console.error('Erro na requisição:', error);

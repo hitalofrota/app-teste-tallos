@@ -58,10 +58,8 @@
             this.token = token;
             localStorage.setItem('token', token);
             setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
-            console.log("Veio aqui ")
             })
             .catch(error => {
-                console.log("Parou aqui ")
             console.error('Erro na requisição:', error);
             });
         },

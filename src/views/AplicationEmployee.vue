@@ -12,12 +12,12 @@
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.id">
-            <td>{{ user.id }}</td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
+            <td>{{ user._id }}</td>
             <td>
               <button class="btn btn-primary btn-sm" @click="editModal(user)">Editar</button>
-              <button class="btn btn-danger btn-sm" @click="removeModal(user)">Excluir</button>
+              <button class="btn btn-danger btn-sm" @click="removeModal(user.id)">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -25,12 +25,12 @@
     </div>
 
     <div class="container mt-4">
-        <!-- Modal -->
-    <div class="modal col-6" ref="creteModal">
+        <!-- Modal De Criação-->
+    <div class="modal col-6" ref="createModal">
       <div class="modal-content">
         <!-- Conteúdo do modal -->
         <div class="modal-header">
-          <h5 class="modal-title">Cadastro</h5>
+          <h5 class="modal-title">Cadastro de novo cliente</h5>
           <button type="button" class="close" data-dismiss="modal" @click="closeCreteModal" aria-label="Fechar">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -38,15 +38,15 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="name">Nome:</label>
-            <input type="text" class="form-control" id="name" v-model="name">
+            <input type="text" class="form-control" id="name" v-model="nameCreateEmployee">
           </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" v-model="email">
+            <input type="email" class="form-control" id="email" v-model="emailCreateEmploye">
           </div>
           <div class="form-group">
             <label for="password">Senha:</label>
-            <input type="password" class="form-control" id="password" v-model="password">
+            <input type="password" class="form-control" id="password" v-model="passwordCreateEmploye">
           </div>
         </div>
         <div class="modal-footer">
@@ -55,7 +55,8 @@
         </div>
       </div>
     </div>
-    <!-- Modal -->
+
+    <!-- Modal de Edição-->
     <div class="modal col-6" ref="myModal">
       <div class="modal-content">
         <!-- Conteúdo do modal -->
@@ -68,15 +69,11 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="name">Nome:</label>
-            <input type="text" class="form-control" id="name" v-model="name">
+            <input type="text" class="form-control" id="name" v-model="nameEdit">
           </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" v-model="email">
-          </div>
-          <div class="form-group">
-            <label for="password">Senha:</label>
-            <input type="password" class="form-control" id="password" v-model="password">
+            <input type="email" class="form-control" id="email" v-model="emailEdit">
           </div>
         </div>
         <div class="modal-footer">
@@ -86,6 +83,7 @@
       </div>
     </div>
 
+    <!-- Modal de exclusão -->
     <div class="modal col-6" ref="removeModal">
       <div class="modal-content">
         <!-- Conteúdo do modal -->
@@ -122,6 +120,11 @@ export default {
         email: '',
         password: '',
         users: [],
+        nameCreateEmployee: '',
+        emailCreateEmploye: '',
+        passwordCreateEmploye: '',
+        nameEdit: '',
+        emailEdit: '',
     };
   },
 
@@ -156,31 +159,36 @@ export default {
           console.log(error);
         });
     },
-
     //Modal de Criação
     createModal() {
-        this.$refs.myModal.style.display = 'block';
+        this.$refs.createModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
     },
     closeCreateModal() {
-        this.$refs.myModal.style.display = 'none';
+        this.$refs.createModal.style.display = 'none';
         document.body.style.overflow = 'auto'; 
     },
     confirmCreateModal() {
+        this.registerUser()
         this.closeModal();
     },
     
     //Modal de Edição
-    editModal() {
+    editModal(user) {
         this.$refs.myModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
+        this.nameEdit = user.name
+        this.emailEdit = user.email
+        this.idEdit = user._id
     },
     closeModal() {
         this.$refs.myModal.style.display = 'none';
         document.body.style.overflow = 'auto'; 
     },
+
     confirmModal() {
-        this.closeModal();
+        const params = this.idEdit
+        this.editUser(params)
     },
 
     //Modal de Remoção
@@ -195,6 +203,46 @@ export default {
     confirmRemoveModal() {
         this.closeModal();
   },
+
+  async registerUser() {
+        const data = {
+            name: this.nameCreateEmployee,
+            email:  this.emailCreateEmploye,
+            password: this.passwordCreateEmploye
+        };
+
+        const url = 'http://localhost:3000/users';
+
+        await axios.post(url, data)
+            .then(response => {
+            console.log("Cliente adicionado", response)
+            this.name = "", this.email = "",this.password = ""
+            })
+            .catch(error => {
+            console.error('Erro na requisição:', error);
+            });
+        },
+
+    async editUser(params) {
+        const tokenJWT = await localStorage.getItem('token')
+            let config = {
+            method: "path",
+            maxBodyLength: Infinity,
+            url: `http://localhost:3000/users${params}`,
+            headers: {
+                Authorization: `Bearer ${tokenJWT}`,
+            },
+         };
+        await axios
+        .request(config)
+        .then((response) => {
+            console.log("Cliente editado", response)
+            this.name = "", this.email = ""
+        })
+        .catch((error) => {
+            console.error('Erro na requisição:', error);
+        });
+    }
 }
 
   

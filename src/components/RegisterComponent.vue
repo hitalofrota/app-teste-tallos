@@ -10,7 +10,7 @@
                     <form>
                     <div>
                         <label>Nome</label>
-                        <input type="text" class="form-control mt-2" v-model="name">
+                        <input type="text" class="form-control mt-2" v-model="username">
                     </div>
                     <div>
                         <label>Email</label>
@@ -27,10 +27,10 @@
                     </form>
                         <div class="d-flex justify-content-center">
                         <div class="buttonSpace">
-                            <button type="submit" class="btn btn-primary mt-2 buttonStyle" @click="registerUser">Registrar</button>
+                            <router-link to="/" class="btn btn-success mt-2 buttonStyle">Voltar ao Início</router-link>
                         </div>
                         <div class="buttonSpace">
-                            <router-link to="/" class="btn btn-success mt-2 buttonStyle">Voltar ao Início</router-link>
+                            <button type="submit" class="btn btn-primary mt-2 buttonStyle" @click="registerUser">Registrar</button>
                         </div>
                         </div>
                 </div>
@@ -47,7 +47,7 @@ import axios from 'axios'
 
         data() {
             return {
-                name: '',
+                username: '',
                 email: '',
                 password: '',
                 password2: ''
@@ -56,23 +56,42 @@ import axios from 'axios'
 
         methods: {
       async registerUser() {
-        const data = {
-            name: this.name,
+        let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: `http://localhost:3000/auth/register`,
+            headers: {
+            "Content-Type": "application/json",
+        },
+            data:{
+            username: this.username,
             email: this.email,
             password: this.password
+            },
         };
 
-        const url = 'http://localhost:3000/users';
+        if(this.username == '' || this.email == '' || this.password == '' || this.password2 == ''){
+            alert("Preencha todos os campos")
+        } else if(this.password.length < 6){
+            alert("A senha deve conter no mínimo 6 caracteres")
+        } else if(this.password2.length < 6){
+            alert("A senha deve conter no mínimo 6 caracteres")
+        }
 
-        await axios.post(url, data)
-            .then(response => {
-            console.log('Resposta do servidor:', response.data);
-            this.name = "", this.email = "",this.password = "",this.password2 = ""
-            setTimeout(() => this.$router.push("/"), 1000)
+        if(this.password != this.password2){
+            alert("As senhas não conferem")
+        } else {
+            
+        axios
+        .request(config)
+            .then((response) => {
+            console.log(JSON.stringify(response.data));
+            this.username = ''; this.email = ''; this.password = ''; this.password2 = '';
             })
-            .catch(error => {
-            console.error('Erro na requisição:', error);
+            .catch((error) => {
+            console.log(error);
             });
+        }
         }
     }
     }

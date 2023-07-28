@@ -1,7 +1,7 @@
 <template>
     <div class="container mt-4">
         <div class="d-flex justify-content-between">
-            <button class="btn btn-primary mb-3" @click="createModal()">Adicionar novo Usuário</button>
+            <button class="btn btn-primary mb-3" @click="createModal()" :disabled="buttonDisable">Adicionar novo Usuário</button>
             <button class="btn btn-secondary mb-3" @click="logout">Sair da aplicação</button>
         </div>
       <table class="table table-bordered custom-table">
@@ -22,8 +22,8 @@
             <td>{{ user.email }}</td>
             <td>{{ user.isAdmin ? 'Administrador' : 'Usuário' }}</td>
             <td>
-              <button class="btn btn-primary btn-sm" @click="editModal(user)">Editar</button>
-              <button class="btn btn-danger btn-sm" @click="removeModal(user)">Excluir</button>
+              <button class="btn btn-primary btn-sm" @click="editModal(user)" :disabled="buttonDisable">Editar</button>
+              <button class="btn btn-danger btn-sm" @click="removeModal(user)" :disabled="buttonDisable">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -132,6 +132,7 @@ export default {
         nameEdit: '',
         emailEdit: '',
         userId: null,
+        buttonDisable: false,
     };
   },
 
@@ -149,6 +150,7 @@ export default {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         this.isAdmin = decodedToken.isAdmin;
         this.userName = decodedToken.username;
+        this.accessNivel()
     } catch (error) {
         console.error('Erro ao decodificar o token:', error.message);
   }}
@@ -324,6 +326,12 @@ export default {
                 console.log(error);
             });
         },
+
+    accessNivel(){
+        if(this.isAdmin == false){
+            this.buttonDisable = true
+        }
+    }
 }
 
 }

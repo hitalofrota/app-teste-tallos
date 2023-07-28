@@ -1,4 +1,4 @@
-<template>isAdminnível
+<template>
     <div class="container mt-4">
         <header class="header-container background">
             <div class="header-content">

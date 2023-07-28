@@ -11,18 +11,22 @@
                     <div>
                         <label>Nome</label>
                         <input type="text" class="form-control mt-2" v-model="username">
+                        <p v-if="errorNome" class="text-danger">O campo de nome é obrigatório</p>
                     </div>
                     <div>
                         <label>Email</label>
                         <input type="text" class="form-control mt-2" v-model="email">
+                        <p v-if="errorEmail" class="text-danger">O campo de nome é obrigatório</p>
                     </div>
                     <div>
                         <label>Senha</label>
                         <input type="password" class="form-control mt-2" v-model="password">
+                        <p v-if="errorSenha1" class="text-danger">O campo de nome é obrigatório</p>
                     </div>
                     <div>
                         <label>Confirme sua senha</label>
                         <input type="password" class="form-control mt-2" v-model="password2">
+                        <p v-if="errorSenha2" class="text-danger">O campo de nome é obrigatório</p>
                     </div>
                     </form>
                         <div class="d-flex justify-content-center">
@@ -53,7 +57,11 @@ import axios from 'axios'
                 username: '',
                 email: '',
                 password: '',
-                password2: ''
+                password2: '',
+                errorNome: false,
+                errorEmail: false,
+                errorSenha1: false,
+                errorSenha2: false
             }
         },
 
@@ -73,18 +81,20 @@ import axios from 'axios'
             },
         };
 
-        if(this.username == '' || this.email == '' || this.password == '' || this.password2 == ''){
-            alert("Preencha todos os campos")
-        } else if(this.password.length < 6){
-            alert("A senha deve conter no mínimo 6 caracteres")
-        } else if(this.password2.length < 6){
-            alert("A senha deve conter no mínimo 6 caracteres")
-        }
-
         if(this.password != this.password2){
             alert("As senhas não conferem")
         } else {
             
+
+        if(!this.username){
+            this.errorNome = true
+        } if (!this.email){
+            this.errorEmail = true 
+        } if (!this.password){
+            this.errorSenha1 = true
+        } if (!this.password2){
+            this.errorSenha2 = true
+        } else {
         axios
         .request(config)
             .then((response) => {
@@ -96,6 +106,11 @@ import axios from 'axios'
             });
         }
         }
+        }
+
+
+       
+       
     }
     }
 </script>

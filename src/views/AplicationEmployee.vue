@@ -1,4 +1,4 @@
-<template>
+<template>isAdminnível
     <div class="container mt-4">
         <header class="header-container background">
             <div class="header-content">
@@ -95,6 +95,10 @@
           <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" class="form-control" id="email" v-model="emailEdit">
+          </div>
+          <div class="form-group">
+            <label for="email">Nível de acesso:</label>
+            <input type="email" class="form-control" id="email" v-model="isAdmin">
           </div>
         </div>
         <div class="modal-footer">
@@ -258,6 +262,7 @@ export default {
         document.body.style.overflow = 'hidden'; 
         this.nameEdit = user.username
         this.emailEdit = user.email
+        this.isAdmin = user.isAdmin
         this.idEdit = user._id
     },
     closeModal() {

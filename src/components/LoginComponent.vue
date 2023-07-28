@@ -15,10 +15,12 @@
                 <div>
                     <form>
                     <div class="col-7">
-                        <input type="text" class="form-control mt-2" placeholder="Usuário" v-model="username">
+                        <input type="text" class="form-control mt-2" placeholder="Usuário"  v-model="username">
+                        <p v-if="errorLogin" class="text-danger">O campo de login é obrigatório</p>
                     </div>
                     <div class="col-7">
-                        <input type="password" class="form-control mt-2" placeholder="Senha" v-model="password">
+                        <input type="password" class="form-control mt-2" placeholder="Senha" required v-model="password">
+                        <p v-if="errorSenha" class="text-danger">O campo de senha é obrigatório</p>
                     </div>
                     </form>
                     <div>
@@ -46,12 +48,13 @@
         data() {
             return {
                 username: '',
-                password: ''
+                password: '',
+                errorLogin: false,
+                errorSenha: false
             }
         },
 
         methods: {
-
         async loginApplication() {
             let config = {
                 method: "post",
@@ -66,19 +69,31 @@
                 },
             };
 
-            console.log("data", this.username, this.password)
+            
+
+            if( !this.username || !this.password ){
+                if(this.username === ''){
+                    this.errorLogin = true
+                    console.log("Entrou usuário")
+                }
+                if(this.password === ''){
+                    this.errorSenha = true
+                    console.log("Entrou senha")
+                }
+            } else {
             axios
             .request(config)
                 .then((response) => {
-                    console.log(response)
-                const token = response.data.access_token;
-                this.token = token;
-                localStorage.setItem('token', token);
-                setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
+                    const token = response.data.access_token;
+                    this.token = token;
+                    localStorage.setItem('token', token);
+                    setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
                 })
                 .catch((error) => {
                 console.log(error);
             });
+            }
+           
         },
     }
     }

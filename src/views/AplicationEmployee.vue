@@ -131,6 +131,7 @@ export default {
         passwordCreateEmploye: '',
         nameEdit: '',
         emailEdit: '',
+        userId: null,
     };
   },
 
@@ -141,7 +142,17 @@ export default {
     } else {
         this.getUsers()
     }
-  },
+
+    const token = localStorage.getItem('token'); 
+    if (token) {
+        try {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        this.isAdmin = decodedToken.isAdmin;
+        this.userName = decodedToken.username;
+    } catch (error) {
+        console.error('Erro ao decodificar o token:', error.message);
+  }}
+},
 
   methods: {
     //Request Usuário
@@ -166,6 +177,26 @@ export default {
         });
     },
 
+    async getOneUser(params) {
+            const tokenJWT = await localStorage.getItem('token')
+            let config = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: `http://localhost:3000/users/${params}`,
+            headers: {
+                Authorization: `Bearer ${tokenJWT}`,
+            },
+         };
+        await axios
+        .request(config)
+        .then((response) => {
+          console.log(response.data)
+          this.users = response.data
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     
     //Modal de Criação
     createModal() {

@@ -20,6 +20,7 @@
             <td>{{ user._id }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.email }}</td>
+            <td>{{ user.isAdmin ? 'Administrador' : 'Usuário' }}</td>
             <td>
               <button class="btn btn-primary btn-sm" @click="editModal(user)">Editar</button>
               <button class="btn btn-danger btn-sm" @click="removeModal(user)">Excluir</button>

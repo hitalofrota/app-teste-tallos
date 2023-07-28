@@ -1,6 +1,21 @@
 <template>
     <div class="container mt-4">
-        <div class="d-flex justify-content-between">
+        <header class="header-container background">
+            <div class="header-content">
+            <h1>UserMetric - Sistema para Gerenciamento de Funcionários</h1>
+            <table class="user-info">
+                <tr>
+                <td>Nome:</td>
+                <td>{{ userName }}</td>
+                </tr>
+                <tr>
+                <td>Cargo:</td>
+                <td>{{ isAdmin ? 'Administrador' : 'Usuário' }}</td>
+                </tr>
+            </table>
+            </div>
+        </header>
+        <div class="d-flex justify-content-between mt-4">
             <button class="btn btn-primary mb-3" @click="createModal()" :disabled="buttonDisable">Adicionar novo Usuário</button>
             <button class="btn btn-secondary mb-3" @click="logout">Sair da aplicação</button>
         </div>
@@ -22,8 +37,8 @@
             <td>{{ user.email }}</td>
             <td>{{ user.isAdmin ? 'Administrador' : 'Usuário' }}</td>
             <td>
-              <button class="btn btn-primary btn-sm" @click="editModal(user)" :disabled="buttonDisable">Editar</button>
-              <button class="btn btn-danger btn-sm" @click="removeModal(user)" :disabled="buttonDisable">Excluir</button>
+              <button class="btn btn-primary btn-sm spacebtn" @click="editModal(user)" :disabled="buttonDisable">Editar</button>
+              <button class="btn btn-danger btn-sm spacebtn" @click="removeModal(user)" :disabled="buttonDisable">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -133,6 +148,8 @@ export default {
         emailEdit: '',
         userId: null,
         buttonDisable: false,
+        userName: "",
+        isAdmin: ""
     };
   },
 
@@ -367,5 +384,16 @@ export default {
   width: 600px;
   position: relative;
   z-index: 1;
+}
+
+.background {
+    color: white;
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.spacebtn {
+    margin-left: 5px
 }
 </style>

@@ -15,6 +15,7 @@
                 <div>
                     <form>
                     <div class="col-7">
+                        <p v-if="badRequest" class="text-danger">Ops, seu login ou sua senha estão incorretos!!</p>
                         <input type="text" class="form-control mt-2" placeholder="Usuário"  v-model="username">
                         <p v-if="errorLogin" class="text-danger">O campo de login é obrigatório</p>
                     </div>
@@ -50,7 +51,8 @@
                 username: '',
                 password: '',
                 errorLogin: false,
-                errorSenha: false
+                errorSenha: false,
+                badRequest: false
             }
         },
 
@@ -90,6 +92,9 @@
                     setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
                 })
                 .catch((error) => {
+                    this.errorLogin = false;
+                    this.errorSenha = false;
+                    this.badRequest = true;
                 console.log(error);
             });
             }

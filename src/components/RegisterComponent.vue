@@ -18,11 +18,11 @@
                     </div>
                     <div>
                         <label>Senha</label>
-                        <input type="text" class="form-control mt-2" v-model="password">
+                        <input type="password" class="form-control mt-2" v-model="password">
                     </div>
                     <div>
                         <label>Confirme sua senha</label>
-                        <input type="text" class="form-control mt-2" v-model="password2">
+                        <input type="password" class="form-control mt-2" v-model="password2">
                     </div>
                     </form>
                         <div class="d-flex justify-content-center">

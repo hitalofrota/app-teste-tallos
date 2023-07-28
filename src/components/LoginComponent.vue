@@ -18,7 +18,7 @@
                         <input type="text" class="form-control mt-2" placeholder="Usuário" v-model="username">
                     </div>
                     <div class="col-7">
-                        <input type="text" class="form-control mt-2" placeholder="Senha" v-model="password">
+                        <input type="password" class="form-control mt-2" placeholder="Senha" v-model="password">
                     </div>
                     </form>
                     <div>

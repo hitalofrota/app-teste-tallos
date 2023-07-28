@@ -1,17 +1,23 @@
 <template>
     <div>
         <div class="col-11">
+        
         <div class="row vh-100 d-flex align-items-center">
-            <div class="col-7">
+            <div class="col-1">   
             </div>
-            <div class="col-5">
+            <div class="col-5 imagem">
+                <img src="../../public/img/imagem-quadrada.jpg" alt="Imagem de login" class="img-fluid">
+            </div>
+            <div class="col-1">   
+            </div>
+            <div class="login col-5 ml-5">
                 <h1 class="h5 mt-5">Faça o seu login</h1>
                 <div>
                     <form>
-                    <div class="col-5">
+                    <div class="col-7">
                         <input type="text" class="form-control mt-2" placeholder="Usuário" v-model="username">
                     </div>
-                    <div class="col-5">
+                    <div class="col-7">
                         <input type="text" class="form-control mt-2" placeholder="Senha" v-model="password">
                     </div>
                     </form>
@@ -27,8 +33,7 @@
                 </div>
             </div>
         </div>
-    </div>
-        
+    </div> 
     </div>
 </template>
 
@@ -83,4 +88,12 @@
 .buttonStyle{
     width: 150px !important;
 }
+
+
+@media (max-width: 800px) {
+  .imagem {
+    display: none;
+  }
+}
+
 </style>

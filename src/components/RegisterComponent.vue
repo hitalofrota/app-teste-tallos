@@ -1,9 +1,9 @@
 <template>
     <div class="col-11">
-        <div class="row vh-90 d-flex align-items-center">
-            <div class="col-6">
+        <div class="row vh-100 d-flex align-items-center">
+            <div class="col-1">
             </div>
-            <div class="col-5 ">
+            <div class="col-5">
                 <h1 class="h2 mt-5">Seja bem vindo ao sistema de cadastro de funcionários</h1>
                 <h1 class="h5 mt-5">Faça o seu cadastro</h1>
                 <div>
@@ -34,6 +34,9 @@
                         </div>
                         </div>
                 </div>
+            </div>
+            <div class="col-5 imagem">
+                <img src="../../public/img/imagem-quadrada.jpg" alt="Imagem de login" class="img-fluid">
             </div>
         </div>
     </div>
@@ -103,5 +106,16 @@ import axios from 'axios'
 }
 .buttonStyle{
     width: 150px !important;
+}
+
+.imagem {
+    display: block; /* Mostrar a div normalmente */
+  }
+
+@media (max-width: 800px) {
+  .imagem {
+    display: none;
+    visibility: hidden;
+  }
 }
 </style>

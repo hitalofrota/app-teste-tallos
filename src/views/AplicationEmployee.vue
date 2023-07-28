@@ -2,7 +2,7 @@
     <div class="container mt-4">
         <header class="header-container background">
             <div class="header-content">
-            <h1>UserMetric - Sistema para Gerenciamento de Funcionários</h1>
+            <h3>UserMetric - Sistema para Gerenciamento de Funcionários</h3>
             <table class="user-info">
                 <tr>
                 <td>Nome:</td>

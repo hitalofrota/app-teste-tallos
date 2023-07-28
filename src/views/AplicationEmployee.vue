@@ -7,6 +7,7 @@
       <table class="table table-bordered custom-table">
         <thead>
           <tr>
+            <th>Índice</th>
             <th>ID</th>
             <th>Nome</th>
             <th>Email</th>
@@ -14,10 +15,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
+          <tr v-for="(user, index) in users" :key="user.id">
+            <td>{{ index + 1 }}</td>
             <td>{{ user._id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
             <td>
               <button class="btn btn-primary btn-sm" @click="editModal(user)">Editar</button>
               <button class="btn btn-danger btn-sm" @click="removeModal(user)">Excluir</button>
@@ -119,7 +121,7 @@ export default {
 
         data() {
     return {
-        name: '',
+        username: '',
         email: '',
         password: '',
         users: [],
@@ -162,6 +164,8 @@ export default {
           console.log(error);
         });
     },
+
+    
     //Modal de Criação
     createModal() {
         this.$refs.createModal1.style.display = 'block';
@@ -180,7 +184,7 @@ export default {
     editModal(user) {
         this.$refs.myModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
-        this.nameEdit = user.name
+        this.nameEdit = user.username
         this.emailEdit = user.email
         this.idEdit = user._id
     },
@@ -216,9 +220,10 @@ export default {
     setTimeout(() => this.$router.push("/"), 1000)
   },
 
+  //criar um usuário
   async registerUser() {
         const data = {
-            name: this.nameCreateEmployee,
+            username: this.nameCreateEmployee,
             email:  this.emailCreateEmploye,
             password: this.passwordCreateEmploye
         };
@@ -228,56 +233,64 @@ export default {
         await axios.post(url, data)
             .then(response => {
             console.log("Cliente adicionado", response)
-            this.name = "", this.email = "",this.password = ""
+            this.username = "", this.email = "",this.password = ""
             })
             .catch(error => {
             console.error('Erro na requisição:', error);
             });
         },
 
+    //editar um usuário
     async editUser(params) {
         const tokenJWT = await localStorage.getItem('token')
-            let config = {
-            method: "path",
-            maxBodyLength: Infinity,
-            url: `http://localhost:3000/users/${params}`,
-            headers: {
-                Authorization: `Bearer ${tokenJWT}`,
-            },
-         };
-        await axios
-        .request(config)
-        .then((response) => {
-            console.log("Cliente editado", response)
-            this.name = "", this.email = ""
-        })
-        .catch((error) => {
-            console.error('Erro na requisição:', error);
+        let config = {
+                method: "patch",
+                maxBodyLength: Infinity,
+                headers: {
+                    Authorization: `Bearer ${tokenJWT}`,
+        },
+                url: `http://localhost:3000/users/${params}`,
+                data:{
+                    username: this.nameEdit,
+                    email: this.emailEdit
+                },
+            };
+
+            console.log("data", this.username, this.password)
+            axios
+            .request(config)
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                console.log(error);
         });
     },
 
+    //remover um usuário
     async removeUser(params) {
-        const tokenJWT = await localStorage.getItem('token')
+            const tokenJWT = await localStorage.getItem('token')
             let config = {
-            method: "delete",
-            maxBodyLength: Infinity,
-            url: `http://localhost:3000/users/${params}`,
-            headers: {
-                Authorization: `Bearer ${tokenJWT}`,
+                method: "delete",
+                maxBodyLength: Infinity,
+                headers: {
+                    Authorization: `Bearer ${tokenJWT}`,
             },
-         };
-        await axios
-        .request(config)
-        .then((response) => {
-            console.log("Cliente removido", response)
-        })
-        .catch((error) => {
-            console.error('Erro na requisição:', error);
-        });
-    }
+                url: `http://localhost:3000/users/${params}`,
+            };
+
+            console.log("data", this.username, this.password)
+            axios
+            .request(config)
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                console.log(error);
+            });
+        },
 }
 
-  
 }
 </script>
 

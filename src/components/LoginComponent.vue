@@ -9,7 +9,7 @@
                 <div>
                     <form>
                     <div class="col-5">
-                        <input type="text" class="form-control mt-2" placeholder="Email" v-model="email">
+                        <input type="text" class="form-control mt-2" placeholder="Usuário" v-model="username">
                     </div>
                     <div class="col-5">
                         <input type="text" class="form-control mt-2" placeholder="Senha" v-model="password">
@@ -40,27 +40,39 @@
 
         data() {
             return {
-                email: '',
+                username: '',
                 password: ''
             }
         },
 
         methods: {
+
         async loginApplication() {
-        const data = {
-            email: this.email,
-            password: this.password
-        };
-        const url = 'http://localhost:3000/auth/login';
-        await axios.post(url, data)
-            .then(response => {
-            const token = response.data.access_token;
-            this.token = token;
-            localStorage.setItem('token', token);
-            setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
-            })
-            .catch(error => {
-            console.error('Erro na requisição:', error);
+            let config = {
+                method: "post",
+                maxBodyLength: Infinity,
+                url: `http://localhost:3000/auth/login`,
+                headers: {
+                "Content-Type": "application/json",
+            },
+                data:{
+                username: this.username,
+                password: this.password
+                },
+            };
+
+            console.log("data", this.username, this.password)
+            axios
+            .request(config)
+                .then((response) => {
+                    console.log(response)
+                const token = response.data.access_token;
+                this.token = token;
+                localStorage.setItem('token', token);
+                setTimeout(() => this.$router.push("/aplicationEmployee"), 1000)
+                })
+                .catch((error) => {
+                console.log(error);
             });
         },
     }

@@ -177,10 +177,31 @@ export default {
     },
     confirmCreateModal() {
         this.registerUser()
-        this.closeModal();
+        this.closeCreateModal();
     },
-    
-    //Modal de Edição
+
+  //criar um usuário
+  async registerUser() {
+        const data = {
+            username: this.nameCreateEmployee,
+            email:  this.emailCreateEmploye,
+            password: this.passwordCreateEmploye
+        };
+
+        const url = 'http://localhost:3000/users';
+
+        await axios.post(url, data)
+            .then(response => {
+            console.log("Cliente adicionado", response)
+            this.getUsers()
+            this.username = "", this.email = "", this.password = ""
+            })
+            .catch(error => {
+            console.error('Erro na requisição:', error);
+            });
+        },
+
+        //Modal de Edição
     editModal(user) {
         this.$refs.myModal.style.display = 'block';
         document.body.style.overflow = 'hidden'; 
@@ -198,47 +219,6 @@ export default {
         this.editUser(params)
         this.closeModal();
     },
-
-    //Modal de Remoção
-    removeModal(user) {
-        this.idRemove = user._id
-        this.$refs.removeModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; 
-    },
-    closeRemoveModal() {
-        this.$refs.removeModal.style.display = 'none';
-        document.body.style.overflow = 'auto'; 
-    },
-    confirmRemoveModal() {
-        const params = this.idRemove
-        this.removeUser(params)
-        this.closeModal();
-  },
-
-  logout() {
-    localStorage.removeItem('token');
-    setTimeout(() => this.$router.push("/"), 1000)
-  },
-
-  //criar um usuário
-  async registerUser() {
-        const data = {
-            username: this.nameCreateEmployee,
-            email:  this.emailCreateEmploye,
-            password: this.passwordCreateEmploye
-        };
-
-        const url = 'http://localhost:3000/users';
-
-        await axios.post(url, data)
-            .then(response => {
-            console.log("Cliente adicionado", response)
-            this.username = "", this.email = "",this.password = ""
-            })
-            .catch(error => {
-            console.error('Erro na requisição:', error);
-            });
-        },
 
     //editar um usuário
     async editUser(params) {
@@ -261,11 +241,33 @@ export default {
             .request(config)
                 .then((response) => {
                     console.log(response)
+                    this.getUsers()
                 })
                 .catch((error) => {
                 console.log(error);
         });
     },
+
+    //Modal de Remoção
+    removeModal(user) {
+        this.idRemove = user._id
+        this.$refs.removeModal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+    },
+    closeRemoveModal() {
+        this.$refs.removeModal.style.display = 'none';
+        document.body.style.overflow = 'auto'; 
+    },
+    confirmRemoveModal() {
+        const params = this.idRemove
+        this.removeUser(params)
+        this.closeRemoveModal();
+  },
+
+  logout() {
+    localStorage.removeItem('token');
+    setTimeout(() => this.$router.push("/"), 1000)
+  },
 
     //remover um usuário
     async removeUser(params) {
@@ -284,6 +286,7 @@ export default {
             .request(config)
                 .then((response) => {
                     console.log(response)
+                    this.getUsers()
                 })
                 .catch((error) => {
                 console.log(error);
